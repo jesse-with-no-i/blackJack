@@ -48,14 +48,14 @@ class GUI():
 
         # player chooses what bet they want to place
         defaultBet = tk.IntVar()
-        defaultBet.set(50)
-        betSpinbox = tk.Spinbox(startFrame, from_=10, to=self.game.get_player().get_bank(),
+        defaultBet.set(10)
+        self.betSpinbox = tk.Spinbox(startFrame, from_=10, to=self.game.get_player().get_bank(),
                                 width=4, textvariable=defaultBet)
-        betSpinbox.grid(row=1, column=1, padx=2)
+        self.betSpinbox.grid(row=1, column=1, padx=2)
 
         # button to start over ($150 in the bank)
         startButton = tk.Button(startFrame, bg=BTNCOLOR, text='Start Game', font=('Arial', 14), width=16,
-                                   command=lambda: self.on_start(betSpinbox))
+                                   command=self.on_start)
         startButton.grid(rowspan=2, row=0, column=0)
 
         # place the start frame into the menu
@@ -97,8 +97,8 @@ class GUI():
             self.bankLabel.config(text=f"You have ${self.game.get_player().get_bank()} in the bank")
 
 
-    def on_start(self, betSpinbox):
-        bet = int(betSpinbox.get())
+    def on_start(self):
+        bet = int(self.betSpinbox.get())
 
         # flag variable
         validInput = True
@@ -317,6 +317,13 @@ class GUI():
         if window.winfo_exists():
             window.destroy()
 
+            # reset the number that the spinbox defaults to
+            defaultBet = tk.IntVar()
+            defaultBet.set(10)
+
+            # reset the spinbox maximum value
+            self.betSpinbox.config(to=self.game.get_player().get_bank(), textvariable=defaultBet)
+
         self.root.deiconify()
 
         # make sure the game is reset before the next game
@@ -393,6 +400,13 @@ class GUI():
         # update the bank label with the new info
         self.bankLabel.config(text=f"You have ${self.game.get_player().get_bank()} in the bank")
 
+        # reset the number that the spinbox defaults to
+        defaultBet = tk.IntVar()
+        defaultBet.set(10)
+
+        # reset the spinbox maximum value
+        self.betSpinbox.config(to=self.game.get_player().get_bank(), textvariable=defaultBet)
+
         # go back to menu
         self.root.deiconify()
 
@@ -402,6 +416,16 @@ class GUI():
 
         # determine how much money is now in the bank
         newBank = self.game.get_player().get_bank() - self.game.get_bet()
+
+        # if the player has less than 10 dollar, you can no longer place bets, so don't let
+        # this total go to 0. Also let the player know they lost
+        if newBank < 10:
+            newBank = 10
+
+            messagebox.showinfo(title="Insufficient funds", message="You have less than $10 left, which is the "
+                                                                    "minimum bet. Luckily, a man who won at the "
+                                                                    "same table as you let you borrow enough money "
+                                                                    "to play one more time. Spend it wisely!")
 
         # subtract funds from the player bank
         with open('playerBank.txt', 'w') as file:
@@ -415,6 +439,13 @@ class GUI():
         # update the bank label with the new info
         self.bankLabel.config(text=f"You have ${self.game.get_player().get_bank()} in the bank")
 
+        # reset the number that the spinbox defaults to
+        defaultBet = tk.IntVar()
+        defaultBet.set(10)
+
+        # reset the spinbox maximum value
+        self.betSpinbox.config(to=self.game.get_player().get_bank(), textvariable=defaultBet)
+
         # bring back the menu
         self.root.deiconify()
 
@@ -422,6 +453,14 @@ class GUI():
     def tie(self):
         messagebox.showinfo(title="Tie", message="It's a push! You tied with the dealer.")
 
+        # reset the number that the spinbox defaults to
+        defaultBet = tk.IntVar()
+        defaultBet.set(10)
+
+        # reset the spinbox maximum value
+        self.betSpinbox.config(to=self.game.get_player().get_bank(), textvariable=defaultBet)
+
         # bring back the menu
         self.root.deiconify()
+
 
