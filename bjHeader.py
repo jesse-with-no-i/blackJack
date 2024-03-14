@@ -91,7 +91,7 @@ class Deck:
         for n in range(len(NAMES)):
             v = VALUES[n]
             for s in SUITS:
-                self.cards.append(Card(NAMES[n], s, v, self.select_image(Card(NAMES[n]), s)))
+                self.cards.append(Card(NAMES[n], s, v, self.select_image(NAMES[n], s)))
         # END OF LOOP
 
 
@@ -189,7 +189,7 @@ class Deck:
 
 
     def select_image(self, name, suit):
-        return "images/card_back.png"
+        return "images/" + name + suit + ".png"
 
 
 # Player class:
