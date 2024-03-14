@@ -62,7 +62,7 @@ class GUI():
         startFrame.pack(padx=10, pady=10)
 
         # button to reset bank information
-        resetBankButton = tk.Button(self.root, bg=BTNCOLOR, text='Restart with $150', font=('Arial', 14), width=20,
+        resetBankButton = tk.Button(self.root, bg=BTNCOLOR, text='Restart with $100', font=('Arial', 14), width=20,
                                     command=self.reset_bank)
         resetBankButton.pack(padx=10, pady=10)
 
@@ -81,12 +81,12 @@ class GUI():
     def reset_bank(self):
         # ask if the player really wants to reset their progress
         if messagebox.askyesno(title="Reset bank?", message="Do you really want to reset?\n"
-                                                            "You will have $150 in the bank."):
+                                                            "You will have $100 in the bank."):
 
             with open('playerBank.txt', 'w') as file:
 
                 # overwrite the bank text file to be 150
-                file.write("150")
+                file.write("100")
                 file.close()
 
             # update the amount of money in the player's bank
@@ -95,6 +95,13 @@ class GUI():
 
             # update the old label
             self.bankLabel.config(text=f"You have ${self.game.get_player().get_bank()} in the bank")
+
+            # reset the number that the spinbox defaults to
+            defaultBet = tk.IntVar()
+            defaultBet.set(10)
+
+            # reset the spinbox maximum value
+            self.betSpinbox.config(to=self.game.get_player().get_bank(), textvariable=defaultBet)
 
 
     def on_start(self):
