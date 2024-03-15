@@ -340,6 +340,16 @@ class Game:
         self.player.hit(self.deck)
         self.dealer.hit(self.deck)
 
+        # check if either player has 2 aces, which is a special case
+        # if so, "use up" one of the aces so their total is 12 instead of 22
+        if self.player.get_num_aces() == 2:
+            self.player.remove_ace()
+            self.player.get_hand()[0].set_value(self.player.get_hand()[0] - 10)
+
+        if self.dealer.get_num_aces() == 2:
+            self.dealer.remove_ace()
+            self.dealer.get_hand()[0].set_value(self.dealer.get_hand()[0] - 10)
+
 
     def get_player(self):
         return self.player
